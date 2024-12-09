@@ -158,11 +158,10 @@ public class WatermarkUtil {
 
         // 加载字体（类似于在 Python 中加载自定义字体）
         // 通过 ClassPathResource 加载字体文件
-        Resource resource = new ClassPathResource("fonts/MiSans-Medium.ttf");
-        InputStream inputStream = resource.getInputStream();
+        File file = new ClassPathResource("fonts/MiSans-Medium.ttf").getFile();
 
         // 使用提供的字体文件创建字体对象，并设置字体大小
-        Font font = Font.createFont(Font.TRUETYPE_FONT, inputStream).deriveFont((float) fontSize);
+        Font font = Font.createFont(Font.TRUETYPE_FONT, file).deriveFont((float) fontSize);
 
         // 设置字体和绘制颜色
         g.setFont(font);
@@ -210,12 +209,12 @@ public class WatermarkUtil {
     }
 
     public static void main(String[] args) {
-        String input_pic = "/Users/xxx/Code/material-tools-java/src/main/resources/input/input_image.jpg";
-        String output_pic = "/Users/xxx/Code/material-tools-java/src/main/resources/output/output_image.jpg";
-        addWatermarkToPic(input_pic, output_pic, "Watermark", 36);
+//        String input_pic = "/Users/maxinhang/Code/material-tools-java/src/main/resources/input/input_image.jpg";
+//        String output_pic = "/Users/maxinhang/Code/material-tools-java/src/main/resources/output/output_image.jpg";
+//        addWatermarkToPic(input_pic, output_pic, "Watermark", 36);
 
-        String input_video = "/Users/xxx/Code/material-tools-java/src/main/resources/input/input_video.mp4";
-        String output_video = "/Users/xxx/Code/material-tools-java/src/main/resources/output/output_video.mp4";
+        String input_video = "/Users/maxinhang/Code/material-tools-java/src/main/resources/input/input_video.mp4";
+        String output_video = "/Users/maxinhang/Code/material-tools-java/src/main/resources/output/output_video.mp4";
         addWatermarkToVideo(input_video, output_video, "Watermark", 36);
     }
 }
