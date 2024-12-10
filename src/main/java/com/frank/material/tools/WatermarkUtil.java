@@ -6,11 +6,14 @@ import org.bytedeco.ffmpeg.global.avcodec;
 import org.bytedeco.javacv.*;
 import org.bytedeco.javacv.Frame;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import javax.imageio.ImageIO;
 
 @Slf4j
@@ -41,6 +44,22 @@ public class WatermarkUtil {
      */
     private static final int VIDEO_BIT_RATE = 2000000;
 
+    private static final String FONT_FILE_DIR_PATH = "/tmp/fonts";
+    private static final Path FONT_FILE_DIR = Paths.get(FONT_FILE_DIR_PATH);
+    private static final File FONT_FILE;
+
+    static {
+        try {
+            Files.createDirectories(FONT_FILE_DIR);
+            ClassPathResource resource = new ClassPathResource("fonts/MiSans-Medium.ttf");
+            try (InputStream inputStream = resource.getInputStream()) {
+                FONT_FILE = FONT_FILE_DIR.resolve("MiSans-Medium_font.ttf").toFile();
+                Files.copy(inputStream, FONT_FILE.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to initialize font file", e);
+        }
+    }
 
     /**
      * 在图片上添加水印文字.
@@ -156,13 +175,8 @@ public class WatermarkUtil {
         // 获取 Graphics2D 对象，用于绘制图形
         Graphics2D g = textPic.createGraphics();
 
-        // 加载字体（类似于在 Python 中加载自定义字体）
-        // 通过 ClassPathResource 加载字体文件
-        Resource resource = new ClassPathResource("fonts/MiSans-Medium.ttf");
-        InputStream inputStream = resource.getInputStream();
-
         // 使用提供的字体文件创建字体对象，并设置字体大小
-        Font font = Font.createFont(Font.TRUETYPE_FONT, inputStream).deriveFont((float) fontSize);
+        Font font = Font.createFont(Font.TRUETYPE_FONT, FONT_FILE).deriveFont((float) fontSize);
 
         // 设置字体和绘制颜色
         g.setFont(font);
@@ -210,12 +224,12 @@ public class WatermarkUtil {
     }
 
     public static void main(String[] args) {
-        String input_pic = "/Users/xxx/Code/material-tools-java/src/main/resources/input/input_image.jpg";
-        String output_pic = "/Users/xxx/Code/material-tools-java/src/main/resources/output/output_image.jpg";
+        String input_pic = "/Users/maxinhang/Code/material-tools-java/src/main/resources/input/input_image.jpg";
+        String output_pic = "/Users/maxinhang/Code/material-tools-java/src/main/resources/output/output_image.jpg";
         addWatermarkToPic(input_pic, output_pic, "Watermark", 36);
 
-        String input_video = "/Users/xxx/Code/material-tools-java/src/main/resources/input/input_video.mp4";
-        String output_video = "/Users/xxx/Code/material-tools-java/src/main/resources/output/output_video.mp4";
+        String input_video = "/Users/maxinhang/Code/material-tools-java/src/main/resources/input/input_video.mp4";
+        String output_video = "/Users/maxinhang/Code/material-tools-java/src/main/resources/output/output_video.mp4";
         addWatermarkToVideo(input_video, output_video, "Watermark", 36);
     }
 }
